@@ -8,21 +8,25 @@ import { resolve } from 'bluebird';
 
 /* your imports */
 
-logTitle('Promises_Fetch_API');
+logTitle('more_Generator');
 /* coding examples */
 // callback adalah function di dalam function
 
-const getRandomUsers = n => {
-    const fetchRandomUsers = fetch(`https://randomuser.me/api/?results=${n}`);
-    fetchRandomUsers.then(data => {
-        data.json().then(randomUsers => {
-            log(JSON.stringify(randomUsers.results.length));
-            randomUsers.results.forEach(user =>{
-                const {gender, email} = user;
-                log(`${gender} - ${email}`);
-            })
-        })
-    });
+const getNumbers = function* (numbers){
+    for (let i = 0; i <  numbers.length; i++) {
+        yield numbers[i]; 
+    }
 }
 
-getRandomUsers(10);
+const getNumberGen = getNumbers([1,2,3,4,5]);
+
+const interval = setInterval(() => {
+    const next = getNumberGen.next();
+    if(next.done){
+        log("this generator is done");
+        clearInterval(interval);
+    }else{
+        const number = next.value;
+        log(number);
+    }
+}, 1000)
